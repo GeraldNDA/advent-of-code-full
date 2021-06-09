@@ -1,0 +1,3 @@
+[submodule "aoc2019"]
+	path = aoc2019
+	url = https://github.com/GeraldNDA/Advent-Of-Code-2019

@@ -1,0 +1,13 @@
+        # if all(curr_range[0] <= bot.pos[dim] <= curr_range[1] for dim, curr_range in enumerate(self.ranges)):
+        #     return True
+ # Otherwise, test that the closest point is not inside the range
+        # direction_vector = [pos - bot.pos[dim] for dim, pos in enumerate(self.center())]
+        # scale = min(bot.radius/abs(dir) if dir != 0 else 0 for dim, dir in enumerate(direction_vector))
+        # closest_point = tuple(bot.pos[dim] + int(dir*scale) for dim, dir in enumerate(direction_vector))
+        # for point_dim in range(3):
+        #     close_point_up = tuple(p if idx != point_dim else p - 1 for idx, p in enumerate(closest_point))
+        #     close_point_down = tuple(p if idx != point_dim else p + 1 for idx, p in enumerate(closest_point))
+        #     for point in (close_point_up, close_point_down):
+        #         if all(curr_range[0] <= point[dim] <= curr_range[1] for dim, curr_range in enumerate(self.ranges)):
+        #             return point in bot
+       

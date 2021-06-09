@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Rope project settings
+.ropeproject
+
+# Puzzle inputs
+day*.txt
+
+# Session key for downloading puzzling inputs
+*aocinfo*
+
+# VS Code Settings
+.vscode/
