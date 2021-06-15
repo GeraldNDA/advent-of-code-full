@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from genericpath import exists
 import stat
 
 from datetime import datetime
