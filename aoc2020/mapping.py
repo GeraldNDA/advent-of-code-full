@@ -2,7 +2,7 @@
 import operator
 from enum import Enum
 from typing import NamedTuple
-from itertools import starmap
+from itertools import product, starmap
 
 class Point(NamedTuple):
     x: int
@@ -76,3 +76,7 @@ class OrdinalDirections(Enum):
 
     def __rmul__(self, other):
         return other * self.value
+
+def all_directions(dim=3):
+    possibilities = (1, 0, -1)
+    yield from product(possibilities, repeat=dim)
