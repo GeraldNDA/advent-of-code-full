@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # Add current dir to path
-from ast import Mult
-from contextlib import suppress
-from multiprocessing.sharedctypes import Value
 import sys
 from pathlib import Path
 sys.path.append(str(Path.cwd()))
@@ -11,6 +8,7 @@ sys.path.append(str(Path.cwd()))
 from aoc import AdventOfCode
 
 import operator
+from itertools import chain
 
 # Input Parse
 puzzle = AdventOfCode(year=2020, day=18)
@@ -22,7 +20,7 @@ class Stream:
         self.gen = (_ for _ in gen)
     
     def _unpeek(self, val):
-        self.gen = (v for v in (val,) + tuple(self.gen))
+        self.gen = chain((val), self.gen)
 
     def try_consume(self, value):
         try:
@@ -62,6 +60,14 @@ class Terminal:
 
     def __repr__(self) -> str:
         return f"{self.value}"
+    
+    @staticmethod
+    def parse(stream):
+        if stream.try_consume("("):
+            val = Operation.parse(stream)
+            stream.consume(")")
+            return val
+        return Terminal(stream.consume_digit())
 
 class Operation:
     def __init__(self, left, right) -> None:
@@ -71,6 +77,20 @@ class Operation:
 
     def eval(self):
         return self.op(self.left.eval(), self.right.eval())
+
+    @staticmethod
+    def parse(stream):
+        left = Terminal.parse(stream)
+        done = False
+        while not done:
+            for op_sym, op in OPERATIONS.items():
+                if stream.try_consume(op_sym):
+                    left = op(left, Terminal.parse(stream))
+                    break
+            else:
+                break
+        return left
+
 
 class Addition(Operation):
     def __init__(self, left, right) -> None:
@@ -88,30 +108,15 @@ class Multiplication(Operation):
     def __repr__(self) -> str:
         return f"({self.left} * {self.right})"
 
+OPERATIONS = {
+    "+": Addition,
+    "*": Multiplication,
+}
+
 def parse_expr(stream):
-    val = parse_op(stream)
+    val = Operation.parse(stream)
     stream.consume_end()
     return val
-
-def parse_op(stream):
-    left = parse_terminal(stream)
-    done = False
-    while not done:
-        if stream.try_consume("+"):
-            left = Addition(left, parse_terminal(stream))
-        elif stream.try_consume("*"):
-            left = Multiplication(left, parse_terminal(stream))
-        else:
-            break
-    return left
-
-def parse_terminal(stream):
-    if stream.try_consume("("):
-        val = parse_op(stream)
-        stream.consume(")")
-        return val
-    return Terminal(stream.consume_digit())
-
 
 def eval_expression(expression_stream):
     expr = parse_expr(Stream(filter(lambda c: c != " ", expression_stream)))
